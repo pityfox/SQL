@@ -1,0 +1,91 @@
+========================
+===== SQL+ Commands ====
+========================
+!!!! Les chaines de caracteres se mettent entre simple quotes et pas doubles !!!!
+!!!! Euh sauf pour ALIASER les nom de col...?! !!!!
+
+AFFICHAGE CONSOLE
+--------------------
+SET LIN(ESIZE) n
+> output par lignes de n caractères
+
+CONNEXION
+--------------
+CONNECT
+
+EXECUTIONS
+-----------------
+START "monfichier.sql"
+> execute les commandes contenues dans le fichier
+
+SAUVEGARDES
+----------------
+save "fichier.sql"
+> sauvegarde le buffer SQL dans le fichier, ie la derniere commande ?
+
+SPOOL "fichier"
+commandes / requêtes
+spool off
+> sauvegarde les output des commandes / requêtes dans fichier.
+
+ARCHITECTURES
+---------------
+DESC(RIPION) table;
+> retourne le modèle de la table == champs et types
+
+SELECTIONS ET OPERATEURS
+--------------------------
+Operateurs requetes AND, OR, NOT
+
+
+Select champs "ALIAS" from matable
+> recup la colonne champs de la table matable en la renommant "ALIAS"
+
+SELECT col1||col2
+> concatène col1 et col2
+
+SELECT col1, 'chaine', col2
+> recup col1 et col2 + creer colone remplie avec 'chaine' entre les deux
+
+SELECT DISTINCT col
+> recup col on éliminant les doublons == récup les valeurs possibles dans la col
+
+SELECT * from table WHERE colname = 'loul'
+> retourn toutes les lignes de la table où la colname = 'loul'
+Operateurs = > < !=
+
+SELECT * from table WHERE truc BETWEEN min AND max;
+> selectionne lignes de la table où le champs truc est compris entre min et max INCLUS
+<=eq=> WHERE truc> min AND truc < max
+
+SELECT * from table WHERE truc IN (val1, val2...);
+> affiche lignes de table où champs truc = val1 ou = val2 ou....
+
+SELECT * from table WHERE truc LIKE '%machin%';
+> affiche les lignes de table où champs truc contient "machin"
+
+SELECT * from table WHERE truc LIKE '%machin\_%' ESCAPE '\';
+> affiche les lignes de table où champs truc contient "machin_"
+
+TRIS
+------
+select * from table ORDER BY [colnum/colname/alias] (DESC);
+> tri selon le n° de col, nom de col, ou son alias, DESC pour décroissant
+
+INSERTIONS ET MISE A JOUR
+---------------------------
+INSERT INTO table (column1,column2..) VALUES (val1,val2...);
+> creer nouvelle entrée dans la table avec val1 dans col1 et val2 dans col2.
+
+UPDATE table SET column1=val1, column2=val2... (WHERE...);
+> met à jour les col de la table par les nouvelles valeurs, utiliser WHERE 
+pour spécifier la ligne, sinon toute la table
+
+FORMATAGE DATE, LANG
+--------------
+ALTER SESSION SET nls_date_format='dd-mm-yyyy HH:mi:sspm';
+ALTER SESSION SET nls_language='french';
+
+SELECT * from table WHERE EXTRACT(YEAR FROM date)=1982;
+> extrait et compare l'année de la col date
+
