@@ -1,25 +1,29 @@
-========================
+﻿========================
 ===== SQL+ Commands ====
 ========================
 !!!! Les chaines de caracteres se mettent entre simple quotes et pas doubles !!!!
-!!!! Euh sauf pour ALIASER les nom de col...?! !!!!
+!!!! Euh sauf pour ALIASER les nom de col et tables... !!!!
 
+--------------------------------------------------------------------------------
 AFFICHAGE CONSOLE
---------------------
+--------------------------------------------------------------------------------
 SET LIN(ESIZE) n
 > output par lignes de n caractères
 
+--------------------------------------------------------------------------------
 CONNEXION
---------------
+--------------------------------------------------------------------------------
 CONNECT
 
+--------------------------------------------------------------------------------
 EXECUTIONS
------------------
+--------------------------------------------------------------------------------
 START "monfichier.sql"
 > execute les commandes contenues dans le fichier
 
+--------------------------------------------------------------------------------
 SAUVEGARDES
-----------------
+--------------------------------------------------------------------------------
 save "fichier.sql"
 > sauvegarde le buffer SQL dans le fichier, ie la derniere commande ?
 
@@ -28,18 +32,20 @@ commandes / requêtes
 spool off
 > sauvegarde les output des commandes / requêtes dans fichier.
 
+--------------------------------------------------------------------------------
 ARCHITECTURES
----------------
+--------------------------------------------------------------------------------
 DESC(RIPION) table;
 > retourne le modèle de la table == champs et types
 
+--------------------------------------------------------------------------------
 SELECTIONS ET OPERATEURS
---------------------------
+--------------------------------------------------------------------------------
 Operateurs requetes AND, OR, NOT
 
 
 Select champs "ALIAS" from matable
-> recup la colonne champs de la table matable en la renommant "ALIAS"
+> recup la colonne champs de la table matable en la renommant par "ALIAS"
 
 SELECT col1||col2
 > concatène col1 et col2
@@ -67,13 +73,15 @@ SELECT * from table WHERE truc LIKE '%machin%';
 SELECT * from table WHERE truc LIKE '%machin\_%' ESCAPE '\';
 > affiche les lignes de table où champs truc contient "machin_"
 
+--------------------------------------------------------------------------------
 TRIS
-------
+--------------------------------------------------------------------------------
 select * from table ORDER BY [colnum/colname/alias] (DESC);
 > tri selon le n° de col, nom de col, ou son alias, DESC pour décroissant
 
+--------------------------------------------------------------------------------
 INSERTIONS ET MISE A JOUR
----------------------------
+--------------------------------------------------------------------------------
 INSERT INTO table (column1,column2..) VALUES (val1,val2...);
 > creer nouvelle entrée dans la table avec val1 dans col1 et val2 dans col2.
 
@@ -81,11 +89,111 @@ UPDATE table SET column1=val1, column2=val2... (WHERE...);
 > met à jour les col de la table par les nouvelles valeurs, utiliser WHERE 
 pour spécifier la ligne, sinon toute la table
 
-FORMATAGE DATE, LANG
---------------
+--------------------------------------------------------------------------------
+FORMATAGE & CONDITIONS
+--------------------------------------------------------------------------------
+DATE & LANG
+------------
 ALTER SESSION SET nls_date_format='dd-mm-yyyy HH:mi:sspm';
 ALTER SESSION SET nls_language='french';
 
 SELECT * from table WHERE EXTRACT(YEAR FROM date)=1982;
 > extrait et compare l'année de la col date
+
+ADD_MONTHS/DAYS/YEARS(date, n)
+> ajoute n mois/jours/annees à date
+
+TO_CHAR(date, format)
+TO_CHAR(date, 'FMDay, "the" Ddspth "of" Month, YYYY')
+> Converti date en format écrit type "Monday, the Twety-first of July, 1988"
+> le FM = Format = supprime zéros et espaces blancs
+
+NEXT_DAY(date, 'Monday')
+> Affiche la date du prochain lundi à partir de date
+
+MONTHS_BETWEEN(date1, date2)
+> Nombres de mois entre date1 et date2
+
+STRINGS & CASE
+---------------
+INITCAP, LOWER, UPPER
+
+VALEURS NULLES
+----------------
+NVL(champs, val)
+> convertie les valeurs nulle de le col champs par la val
+
+DECODE
+-------
+Decode(champs, val, do, champs2, val2, do2, do3)
+> if champs = val then do
+elif champs2 = va2 then do2
+else do3
+
+--------------------------------------------------------------------------------
+ JOINTURES
+--------------------------------------------------------------------------------
+Equijointure
+-------------
+Foreign Key = Primary key d'une autre table
+
+SELECT table1.col, table2.col
+FROM table1,table2
+WHERE table1.FK = table2.PK;
+
+ALIASING
+--------
+SELECT t.col, t2.col
+FROM table1 t,table2 t2
+WHERE t.FK = t2.PK;
+
+Non equijointure
+------------------
+SELECT t1.truc, t2.machin
+FROM table1 t1, table2 t2
+WHERE t1.truc BETWEEN t2.bidule AND t2.chose
+
+CF INNER JOIN
+
+Jointure Externe
+------------------
+CF OUTER JOIN
+
+Recup les elements qui sont equijoints + les elements qui n'ont aucune valeur associée...
+WHERE t.truc(+) = t2.machin; affiche en plus les machins associés à rien
+ou
+WHERE t.truc = t2.machin(+); affiche en plus les trucs associés a rien
+
+Auto-jointure
+-----------------
+Liaisons interne, dans une table, type Employés ont un manager, mais un manageur est aussi un employé
+FROM table.col1 t, table.col2 t2
+Where t.key = t2.key2
+
+
+CALCULS
+----------
+SELECT COUNT(truc)
+> retourne le nombre de lignes dont la colonne truc est remplie (exluant les NULL)
+
+SELECT COUNT(DISTINCT truc)
+> compte les val possibles = idem mais ne compte pas les doublons
+
+SELECT AVG(truc)
+> fais la moyenne de truc SANS COMPRENDRE LES NULL
+
+SELECT AVG(NVL(truc, 0))
+> remplace les NULL de truc par zero, du coup la moyenne se fait sur toute la colonne
+
+GROUPAGE / CLUSTERING
+-----------------------
+SELECT machin, fonction(truc)
+FROM table
+GROUP BY machin;
+> Groupe la table par les machin, et pour chaque groupe de machin retourne result de fonction sur la colonne truc
+
+CONDITIONS SUR GROUPES
+-----------------
+GROUP BY ....
+HAVING group_condition
 

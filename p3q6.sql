@@ -1,0 +1,1 @@
+SELECT ename, hiredate, ROUND(MONTHS_BETWEEN(sysdate,hiredate)) MONTHS_WORKED FROM emp;
