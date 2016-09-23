@@ -14,7 +14,8 @@ FROM emp
 WHERE sal > (
 			SELECT AVG(sal)
 			FROM emp
-			);
+			)
+ORDER BY sal DESC;
 			
 --EX3
 SELECT empno, ename
@@ -62,5 +63,6 @@ WHERE sal > (
 AND deptno IN (
 			SELECT deptno
 			FROM emp
-			WHERE ename LIKE '%T%');
+			WHERE ename LIKE '%T%'
+			);
 			

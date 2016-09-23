@@ -1,7 +1,7 @@
 ﻿========================
 ===== SQL+ Commands ====
 ========================
-!!!! Les chaines de caracteres se mettent entre simple quotes et pas doubles !!!!
+!!!! Les chaines de caracteres se mettent entre simple quotes et pas doubles !!!
 !!!! Euh sauf pour ALIASER les nom de col et tables... !!!!
 
 --------------------------------------------------------------------------------
@@ -61,7 +61,8 @@ SELECT * from table WHERE colname = 'loul'
 Operateurs = > < !=
 
 SELECT * from table WHERE truc BETWEEN min AND max;
-> selectionne lignes de la table où le champs truc est compris entre min et max INCLUS
+> selectionne lignes de la table où le champs truc est compris entre min et max 
+INCLUS
 <=eq=> WHERE truc> min AND truc < max
 
 SELECT * from table WHERE truc IN (val1, val2...);
@@ -80,14 +81,25 @@ select * from table ORDER BY [colnum/colname/alias] (DESC);
 > tri selon le n° de col, nom de col, ou son alias, DESC pour décroissant
 
 --------------------------------------------------------------------------------
-INSERTIONS ET MISE A JOUR
+INSERTIONS, MISE A JOUR et SUPPRESSION
 --------------------------------------------------------------------------------
 INSERT INTO table (column1,column2..) VALUES (val1,val2...);
 > creer nouvelle entrée dans la table avec val1 dans col1 et val2 dans col2.
 
+INSERT INTO table (vars)
+SELECT vars
+FROM table2
+WHERE truc = machin
+> copie données d'une table à l'autre
+
 UPDATE table SET column1=val1, column2=val2... (WHERE...);
 > met à jour les col de la table par les nouvelles valeurs, utiliser WHERE 
 pour spécifier la ligne, sinon toute la table
+
+DELETE
+FROM table
+WHERE truc = chose;
+> supprime
 
 --------------------------------------------------------------------------------
 FORMATAGE & CONDITIONS
@@ -159,22 +171,26 @@ Jointure Externe
 ------------------
 CF OUTER JOIN
 
-Recup les elements qui sont equijoints + les elements qui n'ont aucune valeur associée...
+Recup les elements qui sont equijoints + les elements qui n'ont aucune valeur 
+associée...
 WHERE t.truc(+) = t2.machin; affiche en plus les machins associés à rien
 ou
 WHERE t.truc = t2.machin(+); affiche en plus les trucs associés a rien
 
 Auto-jointure
 -----------------
-Liaisons interne, dans une table, type Employés ont un manager, mais un manageur est aussi un employé
+Liaisons interne, dans une table, type Employés ont un manager, mais un manageur
+est aussi un employé
 FROM table.col1 t, table.col2 t2
 Where t.key = t2.key2
 
 
-CALCULS
-----------
+--------------------------------------------------------------------------------
+ CALCULS ET STATS SIMPLES
+--------------------------------------------------------------------------------
 SELECT COUNT(truc)
-> retourne le nombre de lignes dont la colonne truc est remplie (exluant les NULL)
+> retourne le nombre de lignes dont la colonne truc est remplie (exluant les 
+NULL)
 
 SELECT COUNT(DISTINCT truc)
 > compte les val possibles = idem mais ne compte pas les doublons
@@ -183,17 +199,29 @@ SELECT AVG(truc)
 > fais la moyenne de truc SANS COMPRENDRE LES NULL
 
 SELECT AVG(NVL(truc, 0))
-> remplace les NULL de truc par zero, du coup la moyenne se fait sur toute la colonne
+> remplace les NULL de truc par zero, du coup la moyenne se fait sur toute la 
+colonne
 
-GROUPAGE / CLUSTERING
------------------------
+--------------------------------------------------------------------------------
+ GROUPAGE / CLUSTERING
+--------------------------------------------------------------------------------
 SELECT machin, fonction(truc)
 FROM table
 GROUP BY machin;
-> Groupe la table par les machin, et pour chaque groupe de machin retourne result de fonction sur la colonne truc
+> Groupe la table par les machin, et pour chaque groupe de machin retourne 
+result de fonction sur la colonne truc
 
 CONDITIONS SUR GROUPES
 -----------------
 GROUP BY ....
 HAVING group_condition
 
+--------------------------------------------------------------------------------
+ VARIABLES
+--------------------------------------------------------------------------------
+utiliser &var dans les requêtes
+Si elle n'est pas définie, elle sera demandée à l'utilisateur lors de 
+l'exécution
+
+Prompt pour la saisie:
+ACCEPT var PROMPT 'blablablab'
